@@ -1,6 +1,8 @@
 # app/main.py
 import logging
+import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .routers import scraper
 from .internal.config import settings
 
@@ -15,6 +17,22 @@ app = FastAPI(
     title="LinkedIn Job Scraper API",
     description="API for scraping remote jobs from LinkedIn",
     version="1.0.0",
+)
+
+# 添加 CORS 支持，只允許 n8n.cerana.tech 和 localhost
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://n8n.cerana.tech",
+        "http://n8n.cerana.tech",
+        "http://localhost",
+        "http://localhost:8001",
+        "http://localhost:8000",
+        "http://localhost:5678",  # n8n 默認端口
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(scraper.router)

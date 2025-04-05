@@ -33,12 +33,15 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Chrome and ChromeDriver
+# Install Chrome and ChromeDriver with architecture detection
 RUN apt-get update && apt-get install -y \
     chromium \
     chromium-driver \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "Architecture: $(uname -m)" \
+    && echo "Chromium binary: $(which chromium)" \
+    && echo "ChromeDriver binary: $(which chromedriver)"
 
 # Copy project files and install dependencies
 COPY pyproject.toml uv.lock ./
