@@ -19,20 +19,13 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# 添加 CORS 支持，只允許 n8n.cerana.tech 和 localhost
+# 添加 CORS 支持，允許所有來源
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://n8n.cerana.tech",
-        "http://n8n.cerana.tech",
-        "http://localhost",
-        "http://localhost:8001",
-        "http://localhost:8000",
-        "http://localhost:5678",  # n8n 默認端口
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],  # 允許所有來源的跨域請求
+    allow_credentials=False,  # 設置為 False 以避免與 allow_origins=["*"] 衝突
+    allow_methods=["*"],  # 允許所有 HTTP 方法
+    allow_headers=["*"],  # 允許所有標頭
 )
 
 app.include_router(scraper.router)
