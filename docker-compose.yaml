@@ -1,0 +1,25 @@
+services:
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    container_name: linkedin-scraper
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+    environment:
+      - CHROME_BIN=/usr/bin/chromium
+      - CHROMEDRIVER_PATH=/usr/bin/chromedriver
+      - LINKEDIN_SCRAPER_HEADLESS=true
+    networks:
+      - nginx-proxy-manager_proxy-network
+    volumes:
+      - scraper_data:/app/data
+
+networks:
+  nginx-proxy-manager_proxy-network:
+    external: true
+
+volumes:
+  scraper_data:

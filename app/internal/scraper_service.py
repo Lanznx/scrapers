@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import List
 from linkedin_jobs_scraper import LinkedinScraper
 from linkedin_jobs_scraper.events import Events, EventData
@@ -16,10 +17,25 @@ logging.basicConfig(level=logging.INFO)
 
 
 def create_linkedin_scraper():
+    from selenium.webdriver.chrome.options import Options
+    
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    
+    # Get chromedriver path from environment variable or use default
+    chrome_executable_path = os.environ.get("CHROMEDRIVER_PATH", None)
+    chrome_binary_location = os.environ.get("CHROME_BIN", None)
+    
+    logging.info(f"Chrome executable path: {chrome_executable_path}")
+    logging.info(f"Chrome binary location: {chrome_binary_location}")
+    
     return LinkedinScraper(
-        chrome_executable_path=None,
-        chrome_binary_location=None,
-        chrome_options=None,
+        chrome_executable_path=chrome_executable_path,
+        chrome_binary_location=chrome_binary_location,
+        chrome_options=chrome_options,
         headless=True,
         max_workers=1,
         slow_mo=1.3,
