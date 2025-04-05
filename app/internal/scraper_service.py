@@ -28,7 +28,9 @@ def create_linkedin_scraper():
 
 
 async def scrape_linkedin_jobs(
-    locations: List[str] = ["United States", "Europe", "Asia"], limit: int = 100
+    locations: List[str] = ["United States", "Europe", "Asia"],
+    limit: int = 100,
+    job_title: str = "software engineer",
 ) -> List[dict]:
     jobs_data = []
 
@@ -41,7 +43,7 @@ async def scrape_linkedin_jobs(
                 "date": data.date,
                 "link": data.link,
                 "description": data.description,
-                "insights": data.insights,
+                "insights": {} if data.insights is None or isinstance(data.insights, list) else data.insights,
             }
             jobs_data.append(job_info)
             logging.info(
@@ -62,7 +64,7 @@ async def scrape_linkedin_jobs(
 
     queries = [
         Query(
-            query="",
+            query=job_title,
             options=QueryOptions(
                 locations=locations,
                 apply_link=True,
@@ -86,6 +88,6 @@ async def scrape_linkedin_jobs(
     try:
         scraper.run(queries)
     finally:
-        scraper.close()
+        print("Scraping completed")
 
     return jobs_data
